@@ -25,31 +25,25 @@
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 50%, #0d1b2a 0%, #000000 100%);
             height: 100vh;
-            display: grid;
-            place-items: center;
-            grid-template-areas: "stack";
             overflow: hidden;
+            position: relative;
             color: var(--text);
         }
-        .container,
-        .clock,
-        .box {
-            grid-area: stack;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
         .container {
-            z-index: 0;
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
             pointer-events: none;
-            overflow: hidden;
+            z-index: 0;
         }
         .stars {
             position: absolute;
-            width: 200vmax;
-            height: 200vmax;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
         }
         .stars-s {
@@ -71,21 +65,22 @@
             animation: spin 120s linear infinite;
         }
         .clock {
-            z-index: 1;
-            pointer-events: none;
-        }
-        .clock-wrapper {
-            position: relative;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 900px;
             height: 900px;
+            z-index: 1;
+            pointer-events: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.3s;
         }
         .border-1 {
             position: absolute;
-            inset: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 6px double rgba(255, 215, 0, 0.5);
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
@@ -107,13 +102,15 @@
         }
         .clock-bg {
             position: absolute;
-            inset: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             background: radial-gradient(transparent 68%, rgba(20, 20, 30, 0.8) 70%, rgba(20, 20, 30, 0.8) 98%, transparent 100%);
         }
         .numbers-container {
             position: absolute;
-            inset: 0;
+            width: 100%;
+            height: 100%;
             animation: spin 240s linear infinite;
         }
         .num {
@@ -157,23 +154,23 @@
             transform: rotate(0deg) translate(260px) rotate(0deg);
             border: 1px solid rgba(255, 215, 0, 0.5);
             background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 5px var(--gold);
+            box-shadow: 0 0 15px var(--gold);
         }
         .m2 {
             transform: rotate(45deg) translate(260px) rotate(-45deg);
             background: transparent;
             box-shadow: inset 8px 2px 0 0 var(--gold);
-            filter: drop-shadow(0 0 8px var(--gold));
+            filter: drop-shadow(0 0 15px var(--gold));
         }
         .m3 {
             transform: rotate(90deg) translate(260px) rotate(-90deg);
             background: linear-gradient(90deg, var(--gold) 50%, rgba(0, 0, 0, 0.8) 50%);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 20px var(--gold);
         }
         .m4 {
             transform: rotate(135deg) translate(260px) rotate(-135deg);
             background: var(--gold);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 25px var(--gold);
         }
         .m4::after {
             content: '';
@@ -186,12 +183,12 @@
         .m5 {
             transform: rotate(180deg) translate(260px) rotate(-180deg);
             background: radial-gradient(circle at 30% 30%, #fff, var(--gold));
-            box-shadow: 0 0 25px var(--gold), 0 0 50px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 0 30px var(--gold), 0 0 60px rgba(255, 215, 0, 0.6);
         }
         .m6 {
             transform: rotate(225deg) translate(260px) rotate(-225deg);
             background: var(--gold);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 25px var(--gold);
         }
         .m6::after {
             content: '';
@@ -204,23 +201,23 @@
         .m7 {
             transform: rotate(270deg) translate(260px) rotate(-270deg);
             background: linear-gradient(-90deg, var(--gold) 50%, rgba(0, 0, 0, 0.8) 50%);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 20px var(--gold);
         }
         .m8 {
             transform: rotate(315deg) translate(260px) rotate(-315deg);
             background: transparent;
             box-shadow: inset -8px 2px 0 0 var(--gold);
-            filter: drop-shadow(0 0 8px var(--gold));
+            filter: drop-shadow(0 0 15px var(--gold));
         }
         .box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             width: 400px;
-            height: auto;
             padding: 40px 30px;
-            background: rgba(10, 15, 30, 0.15);
+            background: rgba(10, 15, 30, 0.2);
             backdrop-filter: blur(2px);
             border-radius: 30px;
             border: 2px solid rgba(255, 215, 0, 0.35);
@@ -381,8 +378,8 @@
             }
         }
         @media (max-width: 768px) {
-            .clock-wrapper {
-                transform: scale(0.65);
+            .clock {
+                transform: translate(-50%, -50%) scale(0.65);
             }
             .box {
                 width: 90%;
@@ -394,8 +391,8 @@
             }
         }
         @media (max-width: 480px) {
-            .clock-wrapper {
-                transform: scale(0.45);
+            .clock {
+                transform: translate(-50%, -50%) scale(0.45);
             }
             .box {
                 width: 90%;
@@ -423,35 +420,33 @@
         <div class="stars stars-l"></div>
     </div>
     <div class="clock">
-        <div class="clock-wrapper">
-            <div class="clock-bg"></div>
-            <div class="border-1"></div>
-            <div class="border-2"></div>
-            <div class="border-dashed"></div>
-            <div class="numbers-container">
-                <div class="num" style="--i:0"><span>XII</span></div>
-                <div class="num" style="--i:1"><span>I</span></div>
-                <div class="num" style="--i:2"><span>II</span></div>
-                <div class="num" style="--i:3"><span>III</span></div>
-                <div class="num" style="--i:4"><span>IV</span></div>
-                <div class="num" style="--i:5"><span>V</span></div>
-                <div class="num" style="--i:6"><span>VI</span></div>
-                <div class="num" style="--i:7"><span>VII</span></div>
-                <div class="num" style="--i:8"><span>VIII</span></div>
-                <div class="num" style="--i:9"><span>IX</span></div>
-                <div class="num" style="--i:10"><span>X</span></div>
-                <div class="num" style="--i:11"><span>XI</span></div>
-            </div>
-            <div class="moon-circle">
-                <div class="moon m1"></div>
-                <div class="moon m2"></div>
-                <div class="moon m3"></div>
-                <div class="moon m4"></div>
-                <div class="moon m5"></div>
-                <div class="moon m6"></div>
-                <div class="moon m7"></div>
-                <div class="moon m8"></div>
-            </div>
+        <div class="clock-bg"></div>
+        <div class="border-1"></div>
+        <div class="border-2"></div>
+        <div class="border-dashed"></div>
+        <div class="numbers-container">
+            <div class="num" style="--i:0"><span>XII</span></div>
+            <div class="num" style="--i:1"><span>I</span></div>
+            <div class="num" style="--i:2"><span>II</span></div>
+            <div class="num" style="--i:3"><span>III</span></div>
+            <div class="num" style="--i:4"><span>IV</span></div>
+            <div class="num" style="--i:5"><span>V</span></div>
+            <div class="num" style="--i:6"><span>VI</span></div>
+            <div class="num" style="--i:7"><span>VII</span></div>
+            <div class="num" style="--i:8"><span>VIII</span></div>
+            <div class="num" style="--i:9"><span>IX</span></div>
+            <div class="num" style="--i:10"><span>X</span></div>
+            <div class="num" style="--i:11"><span>XI</span></div>
+        </div>
+        <div class="moon-circle">
+            <div class="moon m1"></div>
+            <div class="moon m2"></div>
+            <div class="moon m3"></div>
+            <div class="moon m4"></div>
+            <div class="moon m5"></div>
+            <div class="moon m6"></div>
+            <div class="moon m7"></div>
+            <div class="moon m8"></div>
         </div>
     </div>
     <div class="box">
@@ -476,16 +471,16 @@
         </form>
     </div>
     <script>
-        document.querySelectorAll('.gr label').forEach(l => {
-            l.innerHTML = l.innerText.split('').map((c, i) => `<span style="transition-delay:${i * 50}ms">${c}</span>`).join('');
-        });
-        document.querySelectorAll('input').forEach(inp => {
-            const gr = inp.parentElement;
+        const grs = document.querySelectorAll('.gr');
+        grs.forEach(g => {
+            const inp = g.querySelector('input');
+            const lbl = g.querySelector('label');
+            lbl.innerHTML = lbl.innerText.split('').map((c, i) => `<span style="transition-delay:${i * 50}ms">${c}</span>`).join('');
             const upd = () => {
                 if (inp.value || document.activeElement === inp) {
-                    gr.classList.add('active');
+                    g.classList.add('active');
                 } else {
-                    gr.classList.remove('active');
+                    g.classList.remove('active');
                 }
             };
             inp.addEventListener('focus', upd);
