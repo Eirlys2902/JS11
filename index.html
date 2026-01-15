@@ -160,7 +160,7 @@
             transform: rotate(45deg) translate(260px) rotate(-45deg);
             background: transparent;
             box-shadow: inset 8px 2px 0 0 var(--gold);
-            filter: drop-shadow(0 0 15px var(--gold));
+            filter: drop-shadow(0 0 5px var(--gold));
         }
         .m3 {
             transform: rotate(90deg) translate(260px) rotate(-90deg);
@@ -216,6 +216,7 @@
             transform: translate(-50%, -50%);
             z-index: 10;
             width: 400px;
+            max-width: 90%; 
             padding: 40px 30px;
             background: rgba(10, 15, 30, 0.2);
             backdrop-filter: blur(2px);
@@ -379,27 +380,26 @@
         }
         @media (max-width: 768px) {
             .clock {
-                transform: translate(-50%, -50%) scale(0.65);
+                transform: translate(-50%, -50%) scale(0.6);
             }
             .box {
-                width: 90%;
-                max-width: 400px;
-                padding: 50px 30px;
+                width: 320px;
+                padding: 40px 25px;
             }
             .title {
-                font-size: 40px;
+                font-size: 32px;
             }
         }
         @media (max-width: 480px) {
             .clock {
-                transform: translate(-50%, -50%) scale(0.45);
+                transform: translate(-50%, -50%) scale(0.4);
             }
             .box {
-                width: 90%;
+                width: 280px;
                 padding: 30px 20px;
             }
             .title {
-                font-size: 28px;
+                font-size: 26px;
                 margin-bottom: 20px;
             }
             .gr {
@@ -471,16 +471,16 @@
         </form>
     </div>
     <script>
-        const grs = document.querySelectorAll('.gr');
-        grs.forEach(g => {
-            const inp = g.querySelector('input');
-            const lbl = g.querySelector('label');
-            lbl.innerHTML = lbl.innerText.split('').map((c, i) => `<span style="transition-delay:${i * 50}ms">${c}</span>`).join('');
+        document.querySelectorAll('.gr label').forEach(l => {
+            l.innerHTML = l.innerText.split('').map((c, i) => `<span style="transition-delay:${i * 50}ms">${c}</span>`).join('');
+        });
+        document.querySelectorAll('input').forEach(inp => {
+            const gr = inp.parentElement;
             const upd = () => {
                 if (inp.value || document.activeElement === inp) {
-                    g.classList.add('active');
+                    gr.classList.add('active');
                 } else {
-                    g.classList.remove('active');
+                    gr.classList.remove('active');
                 }
             };
             inp.addEventListener('focus', upd);
