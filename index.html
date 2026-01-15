@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS11</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000000;
+            --gold: #ffd700;
+            --text: #e6f1ff;
+            --size: 24px;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% 50%, #0d1b2a 0%, #000000 100%);
+            height: 100vh;
+            display: grid;
+            place-items: center;
+            grid-template-areas: "stack";
+            overflow: hidden;
+            color: var(--text);
+        }
+        .container,
+        .clock,
+        .box {
+            grid-area: stack;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .stars {
+            position: absolute;
+            width: 200vmax;
+            height: 200vmax;
+            border-radius: 50%;
+        }
+        .stars-s {
+            background-image: radial-gradient(1px 1px at 20px 30px, #fff, transparent), radial-gradient(1px 1px at 150px 150px, #fff, transparent), radial-gradient(1px 1px at 80px 10px, #fff, transparent);
+            background-size: 200px 200px;
+            opacity: 0.6;
+            animation: spin 240s linear infinite;
+        }
+        .stars-m {
+            background-image: radial-gradient(2px 2px at 50px 50px, var(--gold), transparent), radial-gradient(2px 2px at 100px 200px, var(--gold), transparent);
+            background-size: 300px 300px;
+            opacity: 0.5;
+            animation: spin 180s linear infinite reverse;
+        }
+        .stars-l {
+            background-image: radial-gradient(3px 3px at 100px 100px, #fff, transparent);
+            background-size: 500px 500px;
+            opacity: 0.8;
+            animation: spin 120s linear infinite;
+        }
+        .clock {
+            z-index: 1;
+            pointer-events: none;
+        }
+        .clock-wrapper {
+            position: relative;
+            width: 900px;
+            height: 900px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        .border-1 {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 6px double rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        .border-2 {
+            position: absolute;
+            width: 74%;
+            height: 74%;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 215, 0, 0.4);
+        }
+        .border-dashed {
+            position: absolute;
+            width: 96%;
+            height: 96%;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 215, 0, 0.15);
+            animation: spin 300s linear infinite;
+        }
+        .clock-bg {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(transparent 68%, rgba(20, 20, 30, 0.8) 70%, rgba(20, 20, 30, 0.8) 98%, transparent 100%);
+        }
+        .numbers-container {
+            position: absolute;
+            inset: 0;
+            animation: spin 240s linear infinite;
+        }
+        .num {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            margin: -40px;
+            text-align: center;
+            line-height: 80px;
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--gold);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            transform: rotate(calc(var(--i) * 30deg)) translate(0, -390px);
+        }
+        .num span {
+            display: block;
+            animation: counter 240s linear infinite;
+        }
+        .moon-circle {
+            position: absolute;
+            width: 65%;
+            height: 65%;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 215, 0, 0.15);
+            animation: spin 180s linear infinite reverse;
+        }
+        .moon {
+            position: absolute;
+            width: var(--size);
+            height: var(--size);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            margin-top: calc(var(--size) / -2);
+            margin-left: calc(var(--size) / -2);
+        }
+        .m1 {
+            transform: rotate(0deg) translate(260px) rotate(0deg);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 5px var(--gold);
+        }
+        .m2 {
+            transform: rotate(45deg) translate(260px) rotate(-45deg);
+            background: transparent;
+            box-shadow: inset 8px 2px 0 0 var(--gold);
+            filter: drop-shadow(0 0 8px var(--gold));
+        }
+        .m3 {
+            transform: rotate(90deg) translate(260px) rotate(-90deg);
+            background: linear-gradient(90deg, var(--gold) 50%, rgba(0, 0, 0, 0.8) 50%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .m4 {
+            transform: rotate(135deg) translate(260px) rotate(-135deg);
+            background: var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .m4::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            clip-path: ellipse(35% 100% at 20% 50%);
+        }
+        .m5 {
+            transform: rotate(180deg) translate(260px) rotate(-180deg);
+            background: radial-gradient(circle at 30% 30%, #fff, var(--gold));
+            box-shadow: 0 0 25px var(--gold), 0 0 50px rgba(255, 215, 0, 0.6);
+        }
+        .m6 {
+            transform: rotate(225deg) translate(260px) rotate(-225deg);
+            background: var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .m6::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            clip-path: ellipse(35% 100% at 80% 50%);
+        }
+        .m7 {
+            transform: rotate(270deg) translate(260px) rotate(-270deg);
+            background: linear-gradient(-90deg, var(--gold) 50%, rgba(0, 0, 0, 0.8) 50%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .m8 {
+            transform: rotate(315deg) translate(260px) rotate(-315deg);
+            background: transparent;
+            box-shadow: inset -8px 2px 0 0 var(--gold);
+            filter: drop-shadow(0 0 8px var(--gold));
+        }
+        .box {
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 400px;
+            height: auto;
+            padding: 40px 30px;
+            background: rgba(10, 15, 30, 0.15);
+            backdrop-filter: blur(2px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.35);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+        .decor {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--gold);
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .tl {
+            top: 12px;
+            left: 12px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 15px;
+        }
+        .tr {
+            top: 12px;
+            right: 12px;
+            border-left: none;
+            border-bottom: none;
+            border-top-right-radius: 15px;
+        }
+        .bl {
+            bottom: 12px;
+            left: 12px;
+            border-right: none;
+            border-top: none;
+            border-bottom-left-radius: 15px;
+        }
+        .br {
+            bottom: 12px;
+            right: 12px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 15px;
+        }
+        .title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            color: var(--gold);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        .line {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        .gr {
+            position: relative;
+            margin: 25px 0;
+            width: 100%;
+        }
+        .gr input {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.4);
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 700;
+            transition: 0.4s;
+            letter-spacing: 1px;
+        }
+        .gr input:focus {
+            outline: none;
+        }
+        .gr.active input {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom-color: var(--gold);
+            box-shadow: 0 5px 10px -5px rgba(255, 215, 0, 0.2);
+        }
+        .gr label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            pointer-events: none;
+            color: rgba(255, 215, 0, 0.5);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .gr label span {
+            display: inline-block;
+            min-width: 5px;
+            transition: 0.3s;
+        }
+        .gr.active label span {
+            color: var(--gold);
+            transform: translateY(-30px);
+            text-shadow: 0 0 5px var(--gold);
+        }
+        .btn {
+            cursor: pointer;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(20, 20, 30, 0.6));
+            color: var(--gold);
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+        .foot {
+            margin-top: 25px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        .foot a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .foot a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--gold);
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes counter {
+            from {
+                transform: rotate(calc(var(--i) * -30deg));
+            }
+            to {
+                transform: rotate(calc(var(--i) * -30deg - 360deg));
+            }
+        }
+        @media (max-width: 768px) {
+            .clock-wrapper {
+                transform: scale(0.65);
+            }
+            .box {
+                width: 90%;
+                max-width: 400px;
+                padding: 50px 30px;
+            }
+            .title {
+                font-size: 40px;
+            }
+        }
+        @media (max-width: 480px) {
+            .clock-wrapper {
+                transform: scale(0.45);
+            }
+            .box {
+                width: 90%;
+                padding: 30px 20px;
+            }
+            .title {
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+            .gr {
+                margin: 20px 0;
+            }
+            .btn {
+                padding: 12px;
+                font-size: 14px;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="stars stars-s"></div>
+        <div class="stars stars-m"></div>
+        <div class="stars stars-l"></div>
+    </div>
+    <div class="clock">
+        <div class="clock-wrapper">
+            <div class="clock-bg"></div>
+            <div class="border-1"></div>
+            <div class="border-2"></div>
+            <div class="border-dashed"></div>
+            <div class="numbers-container">
+                <div class="num" style="--i:0"><span>XII</span></div>
+                <div class="num" style="--i:1"><span>I</span></div>
+                <div class="num" style="--i:2"><span>II</span></div>
+                <div class="num" style="--i:3"><span>III</span></div>
+                <div class="num" style="--i:4"><span>IV</span></div>
+                <div class="num" style="--i:5"><span>V</span></div>
+                <div class="num" style="--i:6"><span>VI</span></div>
+                <div class="num" style="--i:7"><span>VII</span></div>
+                <div class="num" style="--i:8"><span>VIII</span></div>
+                <div class="num" style="--i:9"><span>IX</span></div>
+                <div class="num" style="--i:10"><span>X</span></div>
+                <div class="num" style="--i:11"><span>XI</span></div>
+            </div>
+            <div class="moon-circle">
+                <div class="moon m1"></div>
+                <div class="moon m2"></div>
+                <div class="moon m3"></div>
+                <div class="moon m4"></div>
+                <div class="moon m5"></div>
+                <div class="moon m6"></div>
+                <div class="moon m7"></div>
+                <div class="moon m8"></div>
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="decor tl"></div>
+        <div class="decor tr"></div>
+        <div class="decor bl"></div>
+        <div class="decor br"></div>
+        <h1 class="title">ĐĂNG NHẬP<div class="line"></div></h1>
+        <form>
+            <div class="gr">
+                <input type="text" required>
+                <label>Tên đăng nhập</label>
+            </div>
+            <div class="gr">
+                <input type="password" required>
+                <label>Mật khẩu</label>
+            </div>
+            <button class="btn">Hoàn tất</button>
+            <p class="foot">
+                Quên mật khẩu? <a href="#">Đặt lại</a>
+            </p>
+        </form>
+    </div>
+    <script>
+        document.querySelectorAll('.gr label').forEach(l => {
+            l.innerHTML = l.innerText.split('').map((c, i) => `<span style="transition-delay:${i * 50}ms">${c}</span>`).join('');
+        });
+        document.querySelectorAll('input').forEach(inp => {
+            const gr = inp.parentElement;
+            const upd = () => {
+                if (inp.value || document.activeElement === inp) {
+                    gr.classList.add('active');
+                } else {
+                    gr.classList.remove('active');
+                }
+            };
+            inp.addEventListener('focus', upd);
+            inp.addEventListener('blur', upd);
+            inp.addEventListener('input', upd);
+            upd();
+        });
+    </script>
+</body>
+</html>
