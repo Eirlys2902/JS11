@@ -471,6 +471,9 @@
         </form>
     </div>
     <script>
+         window.onload = function() {
+            window.scrollTo(0, 0);
+        }
         document.querySelectorAll('.gr label').forEach(l => {
             l.innerHTML = l.innerText.split('').map((c, i) => `<span style="transition-delay:${i * 50}ms">${c}</span>`).join('');
         });
